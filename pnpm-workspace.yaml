@@ -1,0 +1,6 @@
+# Native build tools used by Angular; keep all other dependency scripts blocked.
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
