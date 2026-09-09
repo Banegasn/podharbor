@@ -1869,22 +1869,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "podharbor"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "futures",
- "k8s-openapi",
- "kube",
- "serde",
- "serde_json",
- "serde_yaml",
- "tauri",
- "tauri-build",
- "tokio",
-]
-
-[[package]]
 name = "keyboard-types"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2653,6 +2637,22 @@ dependencies = [
  "fdeflate",
  "flate2",
  "miniz_oxide 0.8.9",
+]
+
+[[package]]
+name = "podharbor"
+version = "0.1.1"
+dependencies = [
+ "chrono",
+ "futures",
+ "k8s-openapi",
+ "kube",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "tauri",
+ "tauri-build",
+ "tokio",
 ]
 
 [[package]]
