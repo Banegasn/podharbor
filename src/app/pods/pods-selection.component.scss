@@ -1,0 +1,132 @@
+:host {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  /* Width is written by the shared resize controller; the cap is restated here so a window resize
+     can never leave the drawer wider than the layout, not even for a frame. */
+  max-width: min(100%, 80vw);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+h2 {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--fs-md);
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--border-light);
+  background: var(--subtle);
+}
+
+/* Summary on top, the merged tail filling the rest — it scrolls, the drawer does not. */
+.body {
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  gap: var(--sp-2) var(--sp-4);
+  margin: 0;
+  padding: var(--sp-5);
+  font-size: var(--fs-sm);
+}
+
+.facts dt {
+  color: var(--fg-muted);
+}
+
+/* Namespace and image lists are unbounded: wrap them instead of pushing the drawer sideways. */
+.facts dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.facts dd.hot {
+  color: var(--warm);
+  font-weight: var(--fw-medium);
+}
+
+.statuses,
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+}
+
+.images {
+  max-height: 96px;
+  overflow: auto;
+}
+
+.inline-logs {
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-top: 1px solid var(--border-light);
+}
+
+.logs-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  min-width: 0;
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--border-light);
+  background: var(--subtle);
+  color: var(--fg-muted);
+}
+
+.logs-bar .sources,
+.logs-bar .count {
+  flex: none;
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.logs-bar .search {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+}
+
+.logs-bar .input {
+  width: 100%;
+  height: var(--control-height-sm);
+  font-size: var(--fs-xs);
+}

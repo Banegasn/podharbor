@@ -1,0 +1,39 @@
+<div #scroller class="stream" [class.wrap]="prefs.$wrap()" tabindex="0" (scroll)="onScroll($event)">
+  <div class="canvas" [style.height.px]="prefs.$wrap() ? null : $canvasHeight()">
+    <div class="rows" [style.transform]="prefs.$wrap() ? null : 'translateY(' + $offsetY() + 'px)'">
+      @for (line of $window(); track line.seq) {
+        <div
+          class="line"
+          [class.error]="line.level === 'error'"
+          [class.warn]="line.level === 'warn'"
+          [class.marker]="line.level === 'marker'"
+        >
+          @if (prefs.$timestamps()) {
+            <span class="ts">{{ formatLogTime(line.timestamp) }}</span>
+          }
+          @if ($showSource()) {
+            <span
+              class="src"
+              [style.color]="line.color"
+              [title]="line.namespace + '/' + line.pod"
+              >{{ podLabel(line) }}</span
+            >
+          }
+          <span class="txt">{{ line.text }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if ($total() === 0) {
+    <p class="empty muted">
+      @if (logs.$sources().length === 0) {
+        Nothing to show yet.
+      } @else if (logs.$filter()) {
+        No line matches the filter.
+      } @else {
+        Waiting for lines…
+      }
+    </p>
+  }
+</div>

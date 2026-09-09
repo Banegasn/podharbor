@@ -1,0 +1,135 @@
+:host {
+  display: grid;
+  /* The chips strip is the only column allowed to give way — it scrolls on its own — so a narrow
+     window squeezes it instead of pushing the refresh and theme controls out of sight. */
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--sp-6);
+  min-height: 58px;
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  /* The bar drags the window, but it is not a handle to point at: no grab cursor. */
+  cursor: default;
+}
+
+:host(.macos-inset) {
+  padding-left: 78px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-input);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--accent);
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.field {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mode {
+  padding: 0 var(--sp-2);
+  border-radius: var(--radius-full);
+  background: var(--warning-bg);
+  color: var(--warning-fg);
+  letter-spacing: 0;
+}
+
+.context-value {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.context .select {
+  width: 158px;
+  height: var(--control-height-sm);
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 2px;
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  height: var(--control-height-sm);
+  padding: 0 var(--sp-4);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--fg-muted);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+
+.tab:hover {
+  background: var(--hover);
+  color: var(--fg);
+}
+
+.tab.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.interval {
+  width: 64px;
+  height: var(--control-height-sm);
+}
+
+@media (max-width: 1080px) {
+  :host {
+    gap: var(--sp-4);
+  }
+
+  .brand h1,
+  .field .label {
+    display: none;
+  }
+}

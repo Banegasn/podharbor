@@ -1,0 +1,170 @@
+<div class="toolbar">
+  <label class="search">
+    <app-icon name="search" [size]="14" />
+    <input
+      #filterInput
+      class="input"
+      type="search"
+      placeholder="Filter pods — name, workload, image, node, status  (Cmd/Ctrl+K)"
+      autocomplete="off"
+      [value]="$filter()"
+      (input)="$filter.set(filterInput.value)"
+    />
+  </label>
+
+  <button
+    type="button"
+    class="btn"
+    [class.is-on]="prefs.$groupByWorkload()"
+    (click)="prefs.patch({ groupByWorkload: !prefs.$groupByWorkload() })"
+  >
+    <app-icon name="workloads" [size]="14" />
+    Group
+  </button>
+
+  @if ($selectedPods().length > 0) {
+    <button type="button" class="btn btn-primary" (click)="tailSelection()">
+      <app-icon name="logs" [size]="14" />
+      Tail logs ({{ $selectedPods().length }})
+    </button>
+    <button type="button" class="btn" (click)="clearSelection()">Clear</button>
+  }
+
+  <span class="count muted">{{ $rows().length }} of {{ kube.$pods().length }}</span>
+</div>
+
+<div class="scroll">
+  <div class="grid-table pods">
+    <div class="grid-row grid-head" [style.gridTemplateColumns]="columns.$template()">
+      <div class="grid-cell check">
+        <input
+          type="checkbox"
+          aria-label="Select all pods"
+          [checked]="$allSelected()"
+          (change)="toggleAll()"
+        />
+      </div>
+      @for (column of columns.columns; track column.key) {
+        <div class="grid-cell head-cell">
+          <button type="button" class="sortable" (click)="sortBy(column.key)">
+            {{ column.label }}
+            <app-icon [name]="sortIcon(column.key)" [size]="11" />
+          </button>
+          <app-column-handle
+            [sizing]="columns"
+            [column]="column.key"
+            [label]="column.label"
+            [attr.aria-valuemin]="column.min"
+          />
+        </div>
+      }
+      <div class="grid-cell"></div>
+    </div>
+
+    @for (item of $items(); track item.key) {
+      @if (item.kind === 'group') {
+        <div class="group-head">
+          <app-icon name="workloads" [size]="12" />
+          {{ item.label }}
+          <span class="muted">{{ item.count }}</span>
+          <button
+            type="button"
+            class="icon-btn icon-btn-xs icon-btn-plain"
+            [attr.aria-label]="'Tail logs of ' + item.label"
+            title="Tail logs of every pod in this group"
+            (click)="tailPods(item.pods)"
+          >
+            <app-icon name="logs" [size]="12" />
+          </button>
+        </div>
+      } @else {
+        <div
+          class="grid-row row"
+          tabindex="0"
+          [style.gridTemplateColumns]="columns.$template()"
+          [class.selected]="$selected().has(item.row.pod.uid)"
+          [class.open]="$drawerPod()?.uid === item.row.pod.uid"
+          (click)="openRow(item.row.pod)"
+          (keydown.enter)="openRow(item.row.pod)"
+        >
+          <div class="grid-cell check">
+            <input
+              type="checkbox"
+              [attr.aria-label]="'Select ' + item.row.pod.name"
+              [checked]="$selected().has(item.row.pod.uid)"
+              (click)="$event.stopPropagation()"
+              (change)="toggle(item.row.pod)"
+            />
+          </div>
+          <div class="grid-cell name" [title]="item.row.pod.name">{{ item.row.pod.name }}</div>
+          <div class="grid-cell muted">{{ item.row.pod.namespace }}</div>
+          <div class="grid-cell" [title]="item.row.workload">{{ item.row.workload }}</div>
+          <div
+            class="grid-cell"
+            [class.not-ready]="item.row.pod.readyCount !== item.row.pod.totalCount"
+          >
+            {{ item.row.pod.readyCount }}/{{ item.row.pod.totalCount }}
+          </div>
+          <div class="grid-cell">
+            <span class="badge" [class]="item.row.tone">{{ item.row.pod.status }}</span>
+          </div>
+          <div class="grid-cell restarts" [class.hot]="item.row.pod.restarts > 0">
+            {{ item.row.pod.restarts }}
+          </div>
+          <div class="grid-cell muted">{{ item.row.age }}</div>
+          <div class="grid-cell mono" [title]="item.row.imageTitle">{{ item.row.image }}</div>
+          <div class="grid-cell muted" [title]="item.row.pod.node">{{ item.row.pod.node }}</div>
+          <div class="grid-cell actions">
+            <button
+              type="button"
+              class="icon-btn icon-btn-xs icon-btn-plain"
+              [attr.aria-label]="'Tail logs of ' + item.row.pod.name"
+              title="Tail logs"
+              (click)="$event.stopPropagation(); tail(item.row.pod)"
+            >
+              <app-icon name="logs" [size]="14" />
+            </button>
+            <button
+              type="button"
+              class="icon-btn icon-btn-xs icon-btn-plain danger"
+              [attr.aria-label]="'Delete pod ' + item.row.pod.name"
+              title="Delete pod"
+              (click)="$event.stopPropagation(); confirmDelete(item.row.pod)"
+            >
+              <app-icon name="trash" [size]="14" />
+            </button>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  @if ($rows().length === 0) {
+    <p class="empty muted">
+      @if (kube.$enabledNamespaces().length === 0) {
+        Enable a namespace to list pods.
+      } @else if (kube.$loading()) {
+        Loading pods…
+      } @else if ($filter()) {
+        No pod matches “{{ $filter() }}”.
+      } @else {
+        No pods in {{ kube.$enabledNamespaces().join(', ') }}.
+      }
+    </p>
+  }
+</div>
+
+@if ($showSelection()) {
+  <app-pods-selection
+    [pods]="$selectedPods()"
+    (tailRequested)="tailSelection()"
+    (clearRequested)="clearSelection()"
+  />
+} @else if ($drawerPod(); as pod) {
+  <app-pod-details
+    [pod]="pod"
+    (closed)="closeDrawer(pod)"
+    (tailRequested)="tail(pod, $event)"
+    (deleteRequested)="confirmDelete(pod)"
+  />
+}

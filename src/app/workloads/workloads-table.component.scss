@@ -1,0 +1,121 @@
+:host {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.search {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.search app-icon {
+  position: absolute;
+  left: var(--sp-4);
+  color: var(--fg-muted);
+  pointer-events: none;
+}
+
+.search .input {
+  width: 100%;
+  padding-left: 28px;
+}
+
+.count {
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+.scroll {
+  min-height: 0;
+  overflow: auto;
+}
+
+.row:hover {
+  background: var(--hover);
+}
+
+.row.expanded {
+  background: var(--active);
+}
+
+.name {
+  font-weight: var(--fw-medium);
+}
+
+.replicas.degraded {
+  color: var(--error-fg);
+  font-weight: var(--fw-semibold);
+}
+
+.chevron {
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-1);
+  padding: 0;
+}
+
+.pods-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-bottom: var(--sp-2);
+  font-size: var(--fs-xs);
+}
+
+.pods {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4) var(--sp-5) var(--sp-4) 34px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--subtle);
+}
+
+.pod {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) 130px 90px 90px 60px auto;
+  align-items: center;
+  gap: var(--sp-4);
+  font-size: var(--fs-sm);
+}
+
+/* Grid items stretch by default, which turns the status pill into a 130px bar. */
+.pod .badge,
+.pod .btn {
+  justify-self: start;
+}
+
+.pod-name {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+
+.none {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+.empty {
+  padding: var(--sp-8) var(--sp-5);
+  text-align: center;
+}

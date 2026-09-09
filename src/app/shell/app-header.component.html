@@ -1,0 +1,97 @@
+<div class="brand">
+  <span class="mark"><app-icon name="server" [size]="18" /></span>
+  <h1>PodHarbor</h1>
+</div>
+
+<div class="field context">
+  <span class="label">Environment</span>
+  <div class="context-value">
+    <select
+      class="select"
+      aria-label="Kubeconfig context"
+      [value]="kube.$context() ?? ''"
+      (change)="onContextChange($event)"
+    >
+      @for (context of kube.$contexts(); track context.name) {
+        <option [value]="context.name" [selected]="context.name === kube.$context()">
+          {{ context.name }}
+        </option>
+      }
+    </select>
+    @if (kube.$isProduction()) {
+      <span class="badge error">production</span>
+    }
+  </div>
+</div>
+
+<div class="field namespaces">
+  <span class="label">
+    Namespaces
+    @if (kube.$namespaceMode() === 'manual') {
+      <span class="mode">manual</span>
+    }
+  </span>
+  <app-namespace-picker />
+</div>
+
+<nav class="tabs" aria-label="Views">
+  @for (tab of tabs; track tab.id) {
+    <button
+      type="button"
+      class="tab"
+      [class.active]="prefs.$view() === tab.id"
+      [attr.aria-current]="prefs.$view() === tab.id"
+      (click)="setView(tab.id)"
+    >
+      <app-icon [name]="tab.icon" [size]="14" />
+      {{ tab.label }}
+    </button>
+  }
+</nav>
+
+<div class="actions">
+  <button
+    type="button"
+    class="icon-btn icon-btn-sm"
+    aria-label="Refresh"
+    title="Refresh (Cmd/Ctrl+R)"
+    [disabled]="kube.$loading()"
+    (click)="kube.refresh()"
+  >
+    <app-icon name="refresh" [size]="16" />
+  </button>
+
+  <button
+    type="button"
+    class="icon-btn icon-btn-sm"
+    [class.is-on]="kube.$autoPoll()"
+    [attr.aria-label]="kube.$autoPoll() ? 'Pause auto refresh' : 'Resume auto refresh'"
+    [title]="kube.$autoPoll() ? 'Auto refresh on' : 'Auto refresh paused'"
+    (click)="kube.setAutoPoll(!kube.$autoPoll())"
+  >
+    <app-icon [name]="kube.$autoPoll() ? 'pause' : 'play'" [size]="16" />
+  </button>
+
+  <select
+    class="select interval"
+    aria-label="Poll interval"
+    [value]="kube.$pollIntervalMs()"
+    (change)="onIntervalChange($event)"
+  >
+    @for (interval of intervals; track interval) {
+      <option [value]="interval" [selected]="interval === kube.$pollIntervalMs()">
+        {{ seconds(interval) }}
+      </option>
+    }
+  </select>
+
+  <button
+    type="button"
+    class="icon-btn icon-btn-sm"
+    [attr.aria-label]="'Theme: ' + theme.$preference()"
+    [title]="'Theme: ' + theme.$preference()"
+    (click)="theme.cycle()"
+  >
+    <app-icon [name]="$themeIcon()" [size]="16" />
+  </button>
+</div>

@@ -1,0 +1,27 @@
+:host {
+  display: grid;
+  /* Capped column: an `auto` one grows to the header's min-content and the excess — the details
+     drawer included, since `main` is its containing block — is clipped by `overflow: hidden`. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  overflow: hidden;
+}
+
+main {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+app-pods-table,
+app-workloads-table,
+app-logs-view {
+  min-height: 0;
+  min-width: 0;
+}

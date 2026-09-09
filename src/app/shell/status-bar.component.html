@@ -1,0 +1,117 @@
+<span class="item">
+  <app-icon name="clock" [size]="12" />
+  {{ $fetchedAtLabel() }}
+  @if (kube.$loading()) {
+    <span class="muted">· refreshing…</span>
+  }
+</span>
+
+<span class="item">{{ kube.$pods().length }} pods</span>
+<span class="item">{{ kube.$workloads().length }} workloads</span>
+<span class="item">{{ kube.$enabledNamespaces().length }} ns enabled</span>
+
+@if (logs.$activeCount() > 0) {
+  <span class="item accent">
+    <app-icon name="logs" [size]="12" />
+    {{ logs.$activeCount() }} streams · {{ logs.$lines().length }} lines
+  </span>
+}
+
+@if (kube.$namespaceErrors().length > 0 || $globalError()) {
+  <button type="button" class="item alert" (click)="toggleErrors()">
+    <app-icon name="warning" [size]="12" />
+    {{ kube.$namespaceErrors().length + ($globalError() ? 1 : 0) }} problems
+  </button>
+}
+
+<span class="spacer"></span>
+
+@if (kube.isDemo) {
+  <span class="item demo" title="No Tauri runtime detected — showing fabricated data">
+    Demo data
+  </span>
+}
+
+@if (kube.$contextInfo(); as context) {
+  <span class="item muted truncate cluster" [title]="context.cluster">
+    {{ context.cluster }} · {{ context.auth }}
+  </span>
+}
+
+<button type="button" class="item" (click)="toggleDiagnostics()">
+  <app-icon name="activity" [size]="12" />
+  Diagnostics
+</button>
+
+@if ($errorsOpen()) {
+  <div class="popover panel errors">
+    <h2>Problems</h2>
+    @if ($globalError(); as message) {
+      <p class="row selectable">{{ message }}</p>
+    }
+    @for (error of kube.$namespaceErrors(); track error.namespace + error.error.message) {
+      <p class="row selectable">
+        <strong>{{ error.namespace }}</strong>
+        {{ describe(error.error) }}
+      </p>
+    }
+  </div>
+}
+
+@if ($diagnosticsOpen()) {
+  <div class="popover panel diagnostics">
+    <h2>Diagnostics</h2>
+    <dl>
+      <dt>kubeconfig</dt>
+      <dd class="mono selectable">{{ kube.$kubeconfigPaths().join(', ') || '-' }}</dd>
+      <dt>KUBECONFIG</dt>
+      <dd class="mono selectable">{{ kube.$environment()?.kubeconfigEnv || '(unset)' }}</dd>
+      <dt>PATH</dt>
+      <dd class="mono selectable wrap">{{ kube.$environment()?.path || '-' }}</dd>
+      <dt>HOME</dt>
+      <dd class="mono selectable">{{ kube.$environment()?.home || '-' }}</dd>
+      <dt>SHELL</dt>
+      <dd class="mono selectable">{{ kube.$environment()?.shell || '-' }}</dd>
+      <dt>context user</dt>
+      <dd class="mono selectable">
+        {{ kube.$contextInfo()?.user || '-' }} · {{ kube.$contextInfo()?.auth || '-' }}
+      </dd>
+      <dt>server</dt>
+      <dd class="mono selectable wrap">{{ kube.$contextInfo()?.server || '-' }}</dd>
+    </dl>
+    <section class="plugins">
+      <h3>Exec plugins</h3>
+      @for (plugin of kube.$environment()?.execPlugins ?? []; track plugin.context) {
+        <p class="plugin" [class.missing]="!plugin.resolved">
+          <app-icon [name]="plugin.resolved ? 'ok' : 'warning'" [size]="12" />
+          <span class="ctx">{{ plugin.context }}</span>
+          <code class="mono selectable">{{ plugin.command }}</code>
+          @if (plugin.resolved; as resolved) {
+            <span class="mono selectable path" [title]="resolved">{{ resolved }}</span>
+          } @else {
+            <span class="path">not found on PATH</span>
+          }
+        </p>
+      } @empty {
+        <p class="hint muted">No context in this kubeconfig uses an exec auth plugin.</p>
+      }
+    </section>
+
+    <p class="hint muted">
+      An exec auth plugin (e.g. <code>aws</code>) must be on that PATH; the desktop app inherits the
+      login shell PATH at startup.
+    </p>
+    <div class="diag-actions">
+      <button type="button" class="btn btn-sm" (click)="kube.reloadContexts()">
+        <app-icon name="refresh" [size]="13" />
+        Re-read kubeconfig
+      </button>
+      @if (!kube.isDemo) {
+        <button type="button" class="btn btn-sm" (click)="openDevtools()">
+          <app-icon name="terminal" [size]="13" />
+          Open devtools
+        </button>
+      }
+    </div>
+  </div>
+}

@@ -1,0 +1,162 @@
+:host {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  height: 30px;
+  padding: 0 var(--sp-5);
+  border-top: 1px solid var(--border);
+  background: var(--bg-light);
+  font-size: var(--fs-xs);
+  color: var(--fg-muted);
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+}
+
+button.item {
+  cursor: pointer;
+}
+
+button.item:hover {
+  color: var(--fg);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.alert {
+  color: var(--error-fg);
+  font-weight: var(--fw-medium);
+}
+
+.demo {
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--warning-border);
+  border-radius: var(--radius-full);
+  background: var(--warning-bg);
+  color: var(--warning-fg);
+  font-weight: var(--fw-medium);
+}
+
+.cluster {
+  max-width: 320px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.panel {
+  right: var(--sp-5);
+  bottom: 30px;
+  width: 460px;
+  max-height: 60vh;
+  overflow: auto;
+  display: grid;
+  gap: var(--sp-4);
+  color: var(--fg);
+}
+
+h2 {
+  margin: 0;
+  font-size: var(--fs-base);
+}
+
+dl {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: var(--sp-2) var(--sp-4);
+  margin: 0;
+  font-size: var(--fs-xs);
+}
+
+dt {
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.03em;
+}
+
+dd {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+dd.wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+h3 {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.plugin {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: 0 0 var(--sp-1);
+  font-size: var(--fs-xs);
+  color: var(--success-fg);
+}
+
+.plugin.missing {
+  color: var(--error-fg);
+}
+
+.plugin .ctx {
+  flex: none;
+  font-weight: var(--fw-semibold);
+  color: var(--fg);
+}
+
+.plugin code {
+  flex: none;
+  color: var(--fg);
+}
+
+.plugin .path {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.errors .row {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--error-border);
+  border-radius: var(--radius-sm);
+  background: var(--error-bg);
+  color: var(--error-fg);
+  font-size: var(--fs-xs);
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--fs-xs);
+}
+
+.diag-actions {
+  display: flex;
+  gap: var(--sp-3);
+}

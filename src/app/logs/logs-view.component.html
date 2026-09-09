@@ -1,0 +1,187 @@
+<div class="toolbar">
+  <app-log-source-picker />
+
+  <label class="search">
+    <app-icon name="filter" [size]="14" />
+    <input
+      #filterInput
+      class="input"
+      type="search"
+      placeholder="Filter lines — plain text or /regex/i  (Cmd/Ctrl+K)"
+      autocomplete="off"
+      [value]="logs.$filter()"
+      (input)="logs.setFilter(filterInput.value)"
+    />
+  </label>
+
+  <app-log-level-filter />
+
+  <button
+    type="button"
+    class="icon-btn"
+    [class.is-on]="logs.$follow()"
+    [attr.aria-label]="logs.$follow() ? 'Following new lines' : 'Follow new lines'"
+    [title]="logs.$follow() ? 'Following (scroll up to pause)' : 'Paused — jump to bottom'"
+    (click)="logs.setFollow(true)"
+  >
+    <app-icon name="follow" [size]="16" />
+  </button>
+
+  <button
+    type="button"
+    class="btn wrap"
+    [class.is-on]="prefs.$wrap()"
+    [attr.aria-pressed]="prefs.$wrap()"
+    aria-label="Wrap lines"
+    title="Wrap lines — off means one line per entry with its own horizontal scroll"
+    (click)="prefs.patch({ wrap: !prefs.$wrap() })"
+  >
+    <app-icon name="wrap" [size]="16" />
+    Wrap
+  </button>
+
+  <button
+    type="button"
+    class="icon-btn"
+    [class.is-on]="prefs.$timestamps()"
+    aria-label="Toggle timestamps"
+    title="Timestamps"
+    (click)="prefs.patch({ timestamps: !prefs.$timestamps() })"
+  >
+    <app-icon name="clock" [size]="16" />
+  </button>
+
+  <label class="control">
+    <span class="muted">tail</span>
+    <select
+      class="select"
+      aria-label="Tail size"
+      [value]="prefs.$tailLines()"
+      (change)="onTailChange($event)"
+    >
+      @for (size of tailSizes; track size) {
+        <option [value]="size" [selected]="size === prefs.$tailLines()">{{ size }}</option>
+      }
+    </select>
+  </label>
+
+  <label class="control">
+    <span class="muted">since</span>
+    <select
+      class="select"
+      aria-label="Since"
+      [value]="prefs.$sinceSeconds() === null ? 'null' : prefs.$sinceSeconds()"
+      (change)="onSinceChange($event)"
+    >
+      @for (option of sinceOptions; track option.label) {
+        <option
+          [value]="option.value === null ? 'null' : option.value"
+          [selected]="option.value === prefs.$sinceSeconds()"
+        >
+          {{ option.label }}
+        </option>
+      }
+    </select>
+  </label>
+
+  <button
+    type="button"
+    class="icon-btn"
+    aria-label="Clear buffer"
+    title="Clear buffer (Cmd/Ctrl+L)"
+    (click)="logs.clear()"
+  >
+    <app-icon name="eraser" [size]="16" />
+  </button>
+
+  <button
+    type="button"
+    class="icon-btn"
+    aria-label="Download as text"
+    title="Download as .txt"
+    [disabled]="$total() === 0"
+    (click)="download()"
+  >
+    <app-icon name="download" [size]="16" />
+  </button>
+</div>
+
+<div class="sources">
+  @for (group of logs.$groups(); track group.id) {
+    <span class="group">
+      <app-icon name="workloads" [size]="12" />
+      <span class="label truncate" [title]="group.namespace + '/' + group.name">
+        {{ group.namespace }}/{{ group.name }}
+      </span>
+      <span class="state">{{ group.kind === 'Deployment' ? 'deploy' : 'sts' }}</span>
+      <button
+        type="button"
+        class="icon-btn icon-btn-bare icon-btn-plain source-btn"
+        [attr.aria-label]="'Stop following ' + group.name"
+        title="Stop following this workload"
+        (click)="logs.removeGroup(group.id)"
+      >
+        <app-icon name="close" [size]="12" />
+      </button>
+    </span>
+  }
+
+  @for (source of logs.$sources(); track source.id) {
+    <span class="source" [class]="source.status">
+      <span class="dot" [style.background]="source.color"></span>
+      <span class="label truncate" [title]="source.namespace + '/' + source.pod">
+        {{ source.namespace }}/{{ source.pod }}
+        @if (source.container) {
+          <span class="muted">:{{ source.container }}</span>
+        }
+      </span>
+      <span class="state">{{ source.status }}</span>
+      @if (source.status === 'gone' || source.status === 'error' || source.status === 'stopped') {
+        <button
+          type="button"
+          class="icon-btn icon-btn-bare icon-btn-plain source-btn"
+          [attr.aria-label]="'Restart stream for ' + source.pod"
+          title="Restart stream"
+          (click)="logs.restartSource(source.id)"
+        >
+          <app-icon name="refresh" [size]="12" />
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="icon-btn icon-btn-bare icon-btn-plain source-btn"
+          [attr.aria-label]="'Stop stream for ' + source.pod"
+          title="Stop stream"
+          (click)="logs.stopSource(source.id)"
+        >
+          <app-icon name="stop" [size]="11" />
+        </button>
+      }
+      <button
+        type="button"
+        class="icon-btn icon-btn-bare icon-btn-plain source-btn"
+        [attr.aria-label]="'Remove ' + source.pod"
+        title="Remove source"
+        (click)="logs.removeSource(source.id)"
+      >
+        <app-icon name="close" [size]="12" />
+      </button>
+    </span>
+  } @empty {
+    @if (logs.$groups().length === 0) {
+      <span class="muted hint">
+        No source yet — use “Add source”, or press “Tail logs” from the Pods and Workloads tabs.
+      </span>
+    }
+  }
+
+  @if (logs.$sources().length > 0) {
+    <span class="spacer"></span>
+    <span class="muted hint">
+      {{ $total() }} / {{ logs.$lines().length }} lines · cap {{ bufferCap }}
+    </span>
+    <button type="button" class="btn btn-sm" (click)="logs.stopAll()">Stop all</button>
+  }
+</div>
+
+<app-log-stream />

@@ -1,0 +1,273 @@
+<app-drawer-handle [resize]="resize" />
+
+<header class="head">
+  <div class="title">
+    <h2 class="truncate" [title]="$pod().name">{{ $pod().name }}</h2>
+    <span class="badge" [class]="$tone()">{{ $pod().status }}</span>
+  </div>
+  <button
+    type="button"
+    class="icon-btn icon-btn-sm"
+    aria-label="Close details"
+    (click)="closed.emit()"
+  >
+    <app-icon name="close" [size]="16" />
+  </button>
+</header>
+
+<nav class="tabs">
+  <button
+    type="button"
+    class="btn btn-sm"
+    [class.is-on]="$tab() === 'overview'"
+    (click)="$tab.set('overview')"
+  >
+    Overview
+  </button>
+  <button
+    type="button"
+    class="btn btn-sm"
+    [class.is-on]="$tab() === 'details'"
+    (click)="$tab.set('details')"
+  >
+    Details
+  </button>
+</nav>
+
+@if ($tab() === 'overview') {
+  <div class="body overview">
+    <dl class="facts">
+      <dt>Namespace</dt>
+      <dd>{{ $pod().namespace }}</dd>
+      <dt>Workload</dt>
+      <dd>{{ $pod().workload?.kind }}/{{ $pod().workload?.name || '-' }}</dd>
+      <dt>Ready</dt>
+      <dd>
+        {{ $pod().readyCount }}/{{ $pod().totalCount }} · {{ $pod().restarts }} restarts
+        @if ($pod().deletionTimestamp) {
+          <span class="badge warning">
+            deleting since {{ formatDateTime($pod().deletionTimestamp) }}
+          </span>
+        }
+      </dd>
+      <dt>Age</dt>
+      <dd>{{ $age() }} · created {{ formatDateTime($pod().createdAt) }}</dd>
+      <dt>Node</dt>
+      <dd class="mono selectable">{{ $pod().node || '-' }}</dd>
+      <dt>Image</dt>
+      <dd class="images">
+        @for (image of $images(); track image.name) {
+          <span class="mono selectable" [title]="image.full">{{ image.short }}</span>
+        }
+      </dd>
+    </dl>
+
+    <section class="inline-logs">
+      <div class="logs-bar">
+        <app-icon name="logs" [size]="13" />
+        @if ($containerOptions().length > 1) {
+          <select
+            class="select"
+            aria-label="Container to tail"
+            [value]="$container()"
+            (change)="onContainerChange($event)"
+          >
+            @for (name of $containerOptions(); track name) {
+              <option [value]="name" [selected]="name === $container()">{{ name }}</option>
+            }
+          </select>
+        } @else {
+          <span class="muted mono truncate">{{ $container() || $pod().name }}</span>
+        }
+
+        <label class="search">
+          <input
+            #logFilter
+            class="input"
+            type="search"
+            placeholder="filter lines — plain or /regex/i"
+            autocomplete="off"
+            [value]="logs.$filter()"
+            (input)="logs.setFilter(logFilter.value)"
+          />
+        </label>
+
+        <app-log-level-filter [compact]="true" />
+
+        <span class="muted count">{{ logs.$filtered().length }}</span>
+
+        <button
+          type="button"
+          class="icon-btn icon-btn-sm"
+          [class.is-on]="prefs.$wrap()"
+          [attr.aria-pressed]="prefs.$wrap()"
+          aria-label="Wrap lines"
+          title="Wrap lines — off means one line per entry with its own horizontal scroll"
+          (click)="prefs.patch({ wrap: !prefs.$wrap() })"
+        >
+          <app-icon name="wrap" [size]="16" />
+        </button>
+
+        <button
+          type="button"
+          class="icon-btn icon-btn-sm"
+          [class.is-on]="logs.$follow()"
+          [title]="logs.$follow() ? 'Following (scroll up to pause)' : 'Paused — jump to bottom'"
+          [attr.aria-label]="logs.$follow() ? 'Following new lines' : 'Follow new lines'"
+          (click)="logs.setFollow(true)"
+        >
+          <app-icon name="follow" [size]="16" />
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-sm"
+          title="Add this pod as a source of the Logs tab"
+          (click)="tailRequested.emit($container() || undefined)"
+        >
+          Open in Logs tab
+        </button>
+      </div>
+
+      <app-log-stream [compact]="true" />
+    </section>
+  </div>
+} @else {
+  <div class="body details">
+    <section>
+      <h3>Containers</h3>
+      @for (entry of $containers(); track entry.container.name) {
+        <article class="container">
+          <div class="container-head">
+            <strong class="truncate">{{ entry.container.name }}</strong>
+            @if (entry.init) {
+              <span class="badge neutral">init</span>
+            }
+            <span class="badge" [class]="entry.container.ready ? 'success' : 'error'">
+              {{ entry.container.ready ? 'ready' : 'not ready' }}
+            </span>
+            <span class="badge neutral">{{ entry.container.state }}</span>
+            @if (entry.container.restartCount > 0) {
+              <span class="badge warning">{{ entry.container.restartCount }} restarts</span>
+            }
+            @if (!entry.init) {
+              <button
+                type="button"
+                class="btn btn-sm"
+                (click)="tailRequested.emit(entry.container.name)"
+              >
+                <app-icon name="logs" [size]="12" />
+                Logs
+              </button>
+            }
+          </div>
+          <dl class="facts">
+            <dt>Image</dt>
+            <dd class="mono selectable">{{ entry.container.image }}</dd>
+            @if (entry.container.imageId) {
+              <dt>Image ID</dt>
+              <dd class="mono selectable">{{ entry.container.imageId }}</dd>
+            }
+            @if (entry.container.stateReason) {
+              <dt>State</dt>
+              <dd>
+                {{ entry.container.stateReason }}
+                @if (entry.container.stateMessage) {
+                  <span class="muted">— {{ entry.container.stateMessage }}</span>
+                }
+              </dd>
+            }
+            @if (entry.container.lastTerminated; as terminated) {
+              <dt>Last termination</dt>
+              <dd>
+                {{ terminated.reason || 'unknown' }} · exit {{ terminated.exitCode }} ·
+                {{ formatDateTime(terminated.finishedAt) }}
+                @if (terminated.message) {
+                  <span class="muted">— {{ terminated.message }}</span>
+                }
+              </dd>
+            }
+            <dt>Resources</dt>
+            <dd class="mono">
+              cpu {{ entry.container.cpuRequest || '-' }}/{{ entry.container.cpuLimit || '-' }} ·
+              mem {{ entry.container.memoryRequest || '-' }}/{{
+                entry.container.memoryLimit || '-'
+              }}
+            </dd>
+            @if (entry.container.ports.length) {
+              <dt>Ports</dt>
+              <dd class="mono">{{ entry.container.ports.join(', ') }}</dd>
+            }
+          </dl>
+        </article>
+      }
+    </section>
+
+    <section>
+      <h3>Pod</h3>
+      <dl class="facts">
+        <dt>Pod IP</dt>
+        <dd class="mono selectable">{{ $pod().podIp || '-' }} · host {{ $pod().hostIp || '-' }}</dd>
+        <dt>QoS</dt>
+        <dd>{{ $pod().qosClass || '-' }} · SA {{ $pod().serviceAccount || 'default' }}</dd>
+        <dt>Owner</dt>
+        <dd>{{ $pod().owner?.kind }}/{{ $pod().owner?.name || '-' }}</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h3>Conditions</h3>
+      <div class="conditions">
+        @for (condition of $pod().conditions; track condition.kind) {
+          <div class="condition">
+            <span class="badge" [class]="condition.status === 'True' ? 'success' : 'warning'">
+              {{ condition.kind }}
+            </span>
+            <span class="muted">
+              {{ condition.reason || condition.status }}
+              @if (condition.message) {
+                — {{ condition.message }}
+              }
+            </span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section>
+      <h3>Labels</h3>
+      <div class="pairs">
+        @for (pair of $labels(); track pair[0]) {
+          <span class="pair mono selectable">{{ pair[0] }}={{ pair[1] }}</span>
+        } @empty {
+          <span class="muted">none</span>
+        }
+      </div>
+    </section>
+
+    <section>
+      <h3>Annotations</h3>
+      <div class="pairs">
+        @for (pair of $annotations(); track pair[0]) {
+          <span class="pair mono selectable">{{ pair[0] }}={{ pair[1] }}</span>
+        } @empty {
+          <span class="muted">none</span>
+        }
+      </div>
+    </section>
+
+    <section class="manifest">
+      <h3>Manifest</h3>
+      <app-doc-viewer [document]="$document()" />
+    </section>
+
+    <section>
+      <h3>Actions</h3>
+      <button type="button" class="btn btn-sm btn-danger" (click)="deleteRequested.emit()">
+        <app-icon name="trash" [size]="13" />
+        Delete pod
+      </button>
+      <p class="hint muted">Asks for confirmation; the controller recreates the pod.</p>
+    </section>
+  </div>
+}

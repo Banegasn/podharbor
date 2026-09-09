@@ -1,0 +1,143 @@
+:host {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  min-height: 0;
+  background: var(--bg-light);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.search {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+}
+
+.search app-icon {
+  position: absolute;
+  left: var(--sp-4);
+  color: var(--fg-muted);
+  pointer-events: none;
+}
+
+.search .input {
+  width: 100%;
+  padding-left: 30px;
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-xs);
+}
+
+.control .select {
+  height: var(--control-height-sm);
+  width: 96px;
+}
+
+.sources {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--border-light);
+  background: var(--subtle);
+}
+
+.source {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  max-width: 320px;
+  height: var(--chip-height);
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  font-size: var(--fs-xs);
+}
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  max-width: 320px;
+  height: var(--chip-height);
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: var(--fs-xs);
+}
+
+.group .label {
+  min-width: 0;
+  font-family: var(--font-mono);
+}
+
+.source.gone,
+.source.error {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error-fg);
+}
+
+.source.stopped {
+  opacity: 0.6;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+}
+
+.source .label {
+  min-width: 0;
+  font-family: var(--font-mono);
+}
+
+.state {
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.04em;
+}
+
+/* Inside a chip: no box of its own, and it keeps the chip's colour instead of turning accent. */
+.source-btn {
+  color: inherit;
+  opacity: 0.65;
+}
+
+.source-btn:hover:not(:disabled) {
+  background: transparent;
+  color: inherit;
+  opacity: 1;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.hint {
+  font-size: var(--fs-xs);
+}
+
+.wrap {
+  flex: none;
+}

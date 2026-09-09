@@ -1,0 +1,110 @@
+:host {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  min-width: 0;
+  /* Hard cap on the pod badge: a 55-character pod name must not starve the text column. */
+  --pod-badge-max: 220px;
+}
+
+/* Drawer variant — a 380px-minimum pane cannot spare 220px for a badge. */
+:host(.compact) {
+  --pod-badge-max: 160px;
+}
+
+.stream {
+  position: relative;
+  min-height: 0;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  background: var(--bg-light);
+}
+
+.canvas {
+  position: relative;
+}
+
+.rows {
+  width: max-content;
+  min-width: 100%;
+}
+
+.line {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  height: var(--log-line-height);
+  line-height: var(--log-line-height);
+  padding: 0 var(--sp-5);
+  white-space: pre;
+  border-left: 2px solid transparent;
+}
+
+/* Wrapped: the row grows, and the text column keeps its own box so continuation rows hang under
+   the timestamp and pod badge instead of under the gutter. */
+.stream.wrap {
+  overflow-x: hidden;
+}
+
+.stream.wrap .line {
+  height: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.stream.wrap .rows {
+  width: auto;
+}
+
+.line:hover {
+  background: var(--hover);
+}
+
+.ts {
+  color: var(--fg-muted);
+  flex: none;
+  white-space: nowrap;
+}
+
+.src {
+  flex: none;
+  max-width: var(--pod-badge-max);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--fw-medium);
+}
+
+/* The only column that gives way, and it may shrink below its content: without `min-width: 0` a
+   long pod name pushes the text into a few-pixel column that wraps character by character. */
+.txt {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.line.error {
+  border-left-color: var(--error-fg);
+  background: var(--error-bg);
+  color: var(--error-fg);
+}
+
+.line.warn {
+  border-left-color: var(--warning-fg);
+  color: var(--warning-fg);
+}
+
+.line.marker {
+  color: var(--fg-muted);
+  font-style: italic;
+  background: var(--subtle);
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  font-family: var(--font);
+}

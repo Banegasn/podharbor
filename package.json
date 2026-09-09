@@ -1,0 +1,38 @@
+{
+  "name": "podharbor",
+  "version": "0.1.0",
+  "scripts": {
+    "ng": "ng",
+    "dev": "ng serve --port 4200 --host localhost",
+    "start": "ng serve --port 4200 --host localhost",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "tauri": "tauri",
+    "desktop:dev": "tauri dev",
+    "desktop:build": "tauri build",
+    "lint": "prettier --check \"src/**/*.{ts,html,scss}\"",
+    "format": "prettier --write \"src/**/*.{ts,html,scss}\""
+  },
+  "private": true,
+  "packageManager": "pnpm@11.8.0",
+  "dependencies": {
+    "@angular/common": "^22.1.0",
+    "@angular/compiler": "^22.1.0",
+    "@angular/core": "^22.1.0",
+    "@angular/forms": "^22.1.0",
+    "@angular/platform-browser": "^22.1.0",
+    "@angular/router": "^22.1.0",
+    "@lucide/angular": "^1.42.0",
+    "@tauri-apps/api": "^2.11.1",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.1.7",
+    "@angular/cli": "^22.1.7",
+    "@angular/compiler-cli": "^22.1.0",
+    "@tauri-apps/cli": "^2.11.4",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2"
+  }
+}

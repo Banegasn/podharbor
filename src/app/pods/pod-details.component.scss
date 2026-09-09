@@ -1,0 +1,217 @@
+:host {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  /* Width is written by the component (persisted, clamped on drag); the cap is restated here so a
+     window resize can never leave the drawer wider than the layout, not even for a frame. */
+  max-width: min(100%, 80vw);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+h2 {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--fs-md);
+}
+
+.tabs {
+  display: flex;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--border-light);
+  background: var(--subtle);
+}
+
+.body {
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Summary on top, the pod's own log tail filling the rest — it scrolls, the drawer does not. */
+.body.overview {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.body.details {
+  overflow: auto;
+  padding: var(--sp-5);
+  display: grid;
+  gap: var(--sp-6);
+  align-content: start;
+}
+
+h3 {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  gap: var(--sp-2) var(--sp-4);
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+.body.overview > .facts {
+  padding: var(--sp-5);
+}
+
+.facts dt {
+  color: var(--fg-muted);
+}
+
+/* Long monospace values (node names, image ids, messages) must wrap inside the drawer. */
+.facts dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+}
+
+.inline-logs {
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-top: 1px solid var(--border-light);
+}
+
+.logs-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  min-width: 0;
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--border-light);
+  background: var(--subtle);
+  color: var(--fg-muted);
+}
+
+.logs-bar .select {
+  height: var(--control-height-sm);
+  max-width: 140px;
+  font-size: var(--fs-xs);
+}
+
+.logs-bar .search {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+}
+
+.logs-bar .input {
+  width: 100%;
+  height: var(--control-height-sm);
+  font-size: var(--fs-xs);
+}
+
+.logs-bar .count {
+  flex: none;
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.container {
+  padding: var(--sp-4);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--bg-light);
+}
+
+.container + .container {
+  margin-top: var(--sp-4);
+}
+
+.container-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  min-width: 0;
+  margin-bottom: var(--sp-3);
+}
+
+.container-head strong {
+  min-width: 0;
+}
+
+.conditions {
+  display: grid;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+}
+
+.condition {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+/* Condition messages are full sentences: wrap them instead of pushing the drawer sideways. */
+.condition .muted {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pairs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.pair {
+  padding: 1px var(--sp-3);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--bg-light);
+  font-size: var(--fs-xs);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.manifest {
+  min-width: 0;
+  max-height: 420px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.hint {
+  margin: var(--sp-3) 0 0;
+  font-size: var(--fs-xs);
+}

@@ -1,0 +1,19 @@
+<app-header />
+
+<main>
+  @switch (prefs.$view()) {
+    @case ('workloads') {
+      <app-workloads-table />
+    }
+    @case ('logs') {
+      <app-logs-view />
+    }
+    @default {
+      <app-pods-table />
+    }
+  }
+</main>
+
+<app-status-bar />
+<app-toast-stack />
+<app-confirm-dialog />

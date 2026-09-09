@@ -1,0 +1,420 @@
+@use './styles/tokens';
+
+/* Base */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: 1.45;
+  color: var(--fg);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+app-root {
+  display: block;
+  height: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+input,
+textarea,
+pre,
+.selectable {
+  user-select: text;
+}
+
+/* Set on `body` while a drag handle is held: the pointer keeps its resize shape over the whole
+   window and no text — not even the selectable panes — is selected by the drag. */
+body.is-resizing,
+body.is-resizing * {
+  user-select: none;
+  cursor: col-resize;
+}
+
+svg {
+  flex: none;
+}
+
+/* Scrollbars */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  background-clip: content-box;
+  background-color: var(--border);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--border-hover);
+}
+
+/* Controls */
+
+.btn {
+  height: var(--control-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  padding: 0 var(--sp-6);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--fg);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--border-hover);
+  background: var(--active);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.btn-primary:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--accent-light);
+}
+
+.btn-danger {
+  color: var(--error-fg);
+}
+
+.btn-danger:hover:not(:disabled) {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+}
+
+.btn-ghost {
+  border-color: transparent;
+  background: transparent;
+}
+
+.btn-sm {
+  height: var(--control-height-sm);
+  padding: 0 var(--sp-4);
+  font-size: var(--fs-xs);
+}
+
+.btn.is-on {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* Every icon-only button in the app: a fixed square with the icon dead centre. The size comes
+   from one of the modifiers below, never from padding — an icon button has none. */
+.icon-btn {
+  width: var(--control-height);
+  height: var(--control-height);
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--fg);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.icon-btn-sm {
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+}
+
+/* Table row actions, popover rows, chips' remove button. */
+.icon-btn-xs {
+  width: var(--icon-btn-sm);
+  height: var(--icon-btn-sm);
+}
+
+/* Inside a chip or a pill, where a bordered box would be a box in a box. */
+.icon-btn-bare {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+}
+
+.icon-btn:hover:not(:disabled) {
+  border-color: var(--border-hover);
+  background: var(--active);
+}
+
+.icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-btn.is-on {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* Borderless variant: the box only shows up on hover. */
+.icon-btn-plain {
+  border-color: transparent;
+  background: transparent;
+  color: var(--fg-muted);
+}
+
+.icon-btn-plain:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--surface);
+  color: var(--accent);
+}
+
+.icon-btn-plain.is-on {
+  border-color: transparent;
+  background: transparent;
+  color: var(--accent);
+}
+
+.icon-btn-plain.danger:hover:not(:disabled) {
+  background: var(--error-bg);
+  color: var(--error-fg);
+}
+
+.btn:focus-visible,
+.icon-btn:focus-visible {
+  border-color: var(--accent-light);
+  box-shadow: var(--shadow-focus);
+  outline: none;
+}
+
+.input,
+.select {
+  height: var(--control-height);
+  min-width: 0;
+  padding: 0 var(--sp-5);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--fg);
+  outline: none;
+}
+
+/* Native selects render their own inset padding and arrow — and WebKit's differs again from
+   Blink's. `appearance: none` drops both; the chevron is painted as a background image and the
+   text is centred by the box's own height, with no `line-height` (which WebKit ignores here). */
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0 28px 0 10px;
+  background-image: var(--chevron);
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  background-size: 11px;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--accent-light);
+  box-shadow: var(--shadow-focus);
+}
+
+.input::placeholder {
+  color: var(--fg-muted);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  height: var(--badge-height);
+  padding: 0 var(--sp-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.badge.neutral {
+  border-color: var(--border);
+  background: var(--hover);
+  color: var(--fg-muted);
+}
+
+.badge.success {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+  color: var(--success-fg);
+}
+
+.badge.error {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error-fg);
+}
+
+.badge.warning {
+  border-color: var(--warning-border);
+  background: var(--warning-bg);
+  color: var(--warning-fg);
+}
+
+.badge.info {
+  border-color: var(--info-border);
+  background: var(--info-bg);
+  color: var(--info-fg);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+}
+
+.muted {
+  color: var(--fg-muted);
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.popover {
+  position: absolute;
+  z-index: 20;
+  padding: var(--sp-4);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Dense tables */
+
+.grid-table {
+  width: 100%;
+  display: grid;
+  align-content: start;
+  font-size: var(--fs-sm);
+}
+
+.grid-row {
+  display: grid;
+  align-items: center;
+  min-height: var(--row-height);
+  border-bottom: 1px solid var(--row-border);
+}
+
+.grid-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  min-height: var(--head-height);
+  border-bottom: 1px solid var(--border);
+  background: var(--table-head);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.grid-cell {
+  padding: 0 var(--sp-4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Header cell of a resizable column: the label fills it, the drag handle sits on its right edge.
+   Its own padding moves to the label so the handle can reach the edge. */
+.head-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.head-cell > .sortable,
+.head-cell > .head-label {
+  flex: 1;
+  min-width: 0;
+  padding: 0 var(--sp-4);
+}
+
+.sortable {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sortable:hover {
+  color: var(--fg);
+}
+
+.sortable app-icon {
+  opacity: 0.6;
+}
+
+.head-label {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,118 @@
+<app-drawer-handle [resize]="resize" />
+
+<header class="head">
+  <div class="title">
+    <h2>{{ $pods().length }} pods selected</h2>
+    @if ($notReady() > 0) {
+      <span class="badge warning">{{ $notReady() }} not ready</span>
+    }
+  </div>
+  <button
+    type="button"
+    class="icon-btn icon-btn-sm"
+    aria-label="Clear selection"
+    title="Clear the selection and close"
+    (click)="clearRequested.emit()"
+  >
+    <app-icon name="close" [size]="16" />
+  </button>
+</header>
+
+<div class="actions">
+  <button
+    type="button"
+    class="btn btn-sm"
+    title="Add every selected pod as a source of the Logs tab"
+    (click)="tailRequested.emit()"
+  >
+    <app-icon name="logs" [size]="13" />
+    Open in Logs tab
+  </button>
+  <button type="button" class="btn btn-sm" (click)="clearRequested.emit()">Clear selection</button>
+</div>
+
+<div class="body">
+  <dl class="facts">
+    <dt>Namespaces</dt>
+    <dd>{{ $namespaces().join(', ') }}</dd>
+    <dt>Workloads</dt>
+    <dd>{{ $workloads().length }} · {{ $workloads().join(', ') }}</dd>
+    <dt>Status</dt>
+    <dd class="statuses">
+      @for (entry of $statuses(); track entry.status) {
+        <span class="badge" [class]="entry.tone">{{ entry.status }} · {{ entry.count }}</span>
+      }
+    </dd>
+    <dt>Restarts</dt>
+    <dd [class.hot]="$restarts() > 0">{{ $restarts() }} across the selection</dd>
+    <dt>Age</dt>
+    <dd>
+      @if ($ages(); as ages) {
+        oldest {{ ages.oldest }} · newest {{ ages.newest }}
+      } @else {
+        -
+      }
+    </dd>
+    <dt>Images</dt>
+    <dd class="images">
+      @for (image of $images(); track image) {
+        <span class="mono selectable">{{ image }}</span>
+      }
+    </dd>
+  </dl>
+
+  <section class="inline-logs">
+    <div class="logs-bar">
+      <app-icon name="logs" [size]="13" />
+      <span class="muted sources">
+        {{ $tailed().length }} of {{ $pods().length }}
+        @if ($pods().length > maxTailPods) {
+          <span title="Wider selections would open one kubelet connection per container">
+            (tail capped at {{ maxTailPods }})
+          </span>
+        }
+      </span>
+
+      <label class="search">
+        <input
+          #logFilter
+          class="input"
+          type="search"
+          placeholder="filter lines — plain or /regex/i"
+          autocomplete="off"
+          [value]="logs.$filter()"
+          (input)="logs.setFilter(logFilter.value)"
+        />
+      </label>
+
+      <app-log-level-filter [compact]="true" />
+
+      <span class="muted count">{{ logs.$filtered().length }}</span>
+
+      <button
+        type="button"
+        class="icon-btn icon-btn-sm"
+        [class.is-on]="prefs.$wrap()"
+        [attr.aria-pressed]="prefs.$wrap()"
+        aria-label="Wrap lines"
+        title="Wrap lines — off means one line per entry with its own horizontal scroll"
+        (click)="prefs.patch({ wrap: !prefs.$wrap() })"
+      >
+        <app-icon name="wrap" [size]="16" />
+      </button>
+
+      <button
+        type="button"
+        class="icon-btn icon-btn-sm"
+        [class.is-on]="logs.$follow()"
+        [title]="logs.$follow() ? 'Following (scroll up to pause)' : 'Paused — jump to bottom'"
+        [attr.aria-label]="logs.$follow() ? 'Following new lines' : 'Follow new lines'"
+        (click)="logs.setFollow(true)"
+      >
+        <app-icon name="follow" [size]="16" />
+      </button>
+    </div>
+
+    <app-log-stream [compact]="true" />
+  </section>
+</div>

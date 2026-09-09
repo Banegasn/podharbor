@@ -1,0 +1,160 @@
+<div class="toolbar">
+  <label class="search">
+    <app-icon name="search" [size]="14" />
+    <input
+      #filterInput
+      class="input"
+      type="search"
+      placeholder="Filter workloads — kind, name, namespace, image  (Cmd/Ctrl+K)"
+      autocomplete="off"
+      [value]="$filter()"
+      (input)="$filter.set(filterInput.value)"
+    />
+  </label>
+  <span class="count muted">{{ $rows().length }} of {{ kube.$workloads().length }}</span>
+</div>
+
+<div class="scroll">
+  <div class="grid-table workloads">
+    <div class="grid-row grid-head" [style.gridTemplateColumns]="columns.$template()">
+      <div class="grid-cell"></div>
+      @for (column of columns.columns; track column.key) {
+        <div class="grid-cell head-cell">
+          @if (column.sort; as sort) {
+            <button type="button" class="sortable" (click)="sortBy(sort)">
+              {{ column.label }}
+              <app-icon [name]="sortIcon(sort)" [size]="11" />
+            </button>
+          } @else {
+            <span class="head-label">{{ column.label }}</span>
+          }
+          <app-column-handle
+            [sizing]="columns"
+            [column]="column.key"
+            [label]="column.label"
+            [attr.aria-valuemin]="column.min"
+          />
+        </div>
+      }
+      <div class="grid-cell"></div>
+    </div>
+
+    @for (row of $rows(); track row.workload.uid) {
+      <div
+        class="grid-row row"
+        [style.gridTemplateColumns]="columns.$template()"
+        [class.expanded]="$expanded().has(row.workload.uid)"
+      >
+        <div class="grid-cell chevron">
+          <button
+            type="button"
+            class="icon-btn icon-btn-xs icon-btn-plain"
+            [attr.aria-label]="'Show pods of ' + row.workload.name"
+            [attr.aria-expanded]="$expanded().has(row.workload.uid)"
+            (click)="toggleExpanded(row.workload)"
+          >
+            <app-icon
+              [name]="$expanded().has(row.workload.uid) ? 'chevron-down' : 'chevron-right'"
+              [size]="14"
+            />
+          </button>
+        </div>
+        <div class="grid-cell">
+          <span class="badge neutral">{{
+            row.workload.kind === 'Deployment' ? 'Deploy' : 'STS'
+          }}</span>
+        </div>
+        <div class="grid-cell name" [title]="row.workload.name">{{ row.workload.name }}</div>
+        <div class="grid-cell muted">{{ row.workload.namespace }}</div>
+        <div class="grid-cell replicas" [class.degraded]="!row.healthy">
+          {{ row.workload.ready }}/{{ row.workload.desired }}
+        </div>
+        <div class="grid-cell muted">{{ row.age }}</div>
+        <div class="grid-cell muted">{{ row.workload.updated }}</div>
+        <div class="grid-cell muted">{{ row.workload.available }}</div>
+        <div class="grid-cell mono" [title]="row.imageTitle">{{ row.images.join(', ') }}</div>
+        <div class="grid-cell">
+          @if (row.degraded) {
+            <span class="badge error">{{ row.degraded }}</span>
+          } @else if (row.workload.paused) {
+            <span class="badge warning">paused</span>
+          } @else {
+            <span class="badge success">available</span>
+          }
+        </div>
+        <div class="grid-cell actions">
+          <button
+            type="button"
+            class="icon-btn icon-btn-xs icon-btn-plain"
+            [class.is-on]="tracked(row.workload)"
+            [attr.aria-label]="'Tail logs of ' + row.workload.name"
+            [title]="
+              tracked(row.workload)
+                ? 'Already followed in the Logs tab'
+                : 'Tail logs of every pod of this workload'
+            "
+            (click)="tailWorkload(row.workload)"
+          >
+            <app-icon name="logs" [size]="14" />
+          </button>
+          <button
+            type="button"
+            class="icon-btn icon-btn-xs icon-btn-plain"
+            [attr.aria-label]="'Rollout restart ' + row.workload.name"
+            title="Rollout restart"
+            (click)="confirmRestart(row.workload)"
+          >
+            <app-icon name="rotate" [size]="14" />
+          </button>
+        </div>
+      </div>
+
+      @if ($expanded().has(row.workload.uid)) {
+        <div class="pods">
+          <div class="pods-head">
+            <span class="muted">
+              {{ podsOf(row.workload).length }} pod(s) matching
+              <span class="mono">{{ row.workload.namespace }}/{{ row.workload.name }}</span>
+            </span>
+            <button
+              type="button"
+              class="btn btn-sm"
+              [class.is-on]="tracked(row.workload)"
+              (click)="tailWorkload(row.workload)"
+            >
+              <app-icon name="logs" [size]="12" />
+              Tail logs
+            </button>
+          </div>
+          @for (pod of podsOf(row.workload); track pod.uid) {
+            <div class="pod">
+              <span class="pod-name truncate" [title]="pod.name">{{ pod.name }}</span>
+              <span class="badge" [class]="podTone(pod)">{{ pod.status }}</span>
+              <span class="muted">{{ pod.readyCount }}/{{ pod.totalCount }} ready</span>
+              <span class="muted">{{ pod.restarts }} restarts</span>
+              <span class="muted">{{ podAge(pod) }}</span>
+              <button type="button" class="btn btn-sm" (click)="tail(pod)">
+                <app-icon name="logs" [size]="12" />
+                Logs
+              </button>
+            </div>
+          } @empty {
+            <p class="muted none">No pod matches the selector in this namespace.</p>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  @if ($rows().length === 0) {
+    <p class="empty muted">
+      @if (kube.$enabledNamespaces().length === 0) {
+        Enable a namespace to list workloads.
+      } @else if (kube.$loading()) {
+        Loading workloads…
+      } @else {
+        No Deployment or StatefulSet found.
+      }
+    </p>
+  }
+</div>

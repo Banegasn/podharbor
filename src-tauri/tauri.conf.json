@@ -1,0 +1,43 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "PodHarbor",
+  "version": "0.1.0",
+  "identifier": "com.banegasn.podharbor",
+  "build": {
+    "beforeDevCommand": "pnpm run dev",
+    "beforeBuildCommand": "pnpm run build",
+    "devUrl": "http://localhost:4200",
+    "frontendDist": "../dist/podharbor/browser"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "PodHarbor",
+        "width": 1440,
+        "height": 920,
+        "minWidth": 760,
+        "minHeight": 520,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "DeveloperTool",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "shortDescription": "Desktop Kubernetes pods, workloads and logs console",
+    "longDescription": "A lightweight desktop console for Kubernetes: browse pods and workloads per namespace, inspect images, replicas and restarts, and tail logs from several pods and namespaces at once, using the kubeconfig contexts already installed for kubectl."
+  }
+}
