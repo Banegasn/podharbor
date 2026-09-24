@@ -26,14 +26,26 @@
   </div>
 
   @if ($total() === 0) {
-    <p class="empty muted">
-      @if (logs.$sources().length === 0) {
-        Nothing to show yet.
-      } @else if (logs.$filter()) {
-        No line matches the filter.
-      } @else {
-        Waiting for lines…
-      }
-    </p>
+    <div class="empty">
+      <span class="empty-icon"><app-icon name="logs" [size]="22" /></span>
+      <strong>
+        @if (logs.$sources().length === 0) {
+          Your log stream is ready
+        } @else if (logs.$lines().length > 0) {
+          No matching lines
+        } @else {
+          Waiting for log lines…
+        }
+      </strong>
+      <span class="muted">
+        @if (logs.$sources().length === 0) {
+          Add a pod or workload source to start streaming.
+        } @else if (logs.$lines().length > 0) {
+          Adjust the text or level filters to see more lines.
+        } @else {
+          New lines will appear here automatically.
+        }
+      </span>
+    </div>
   }
 </div>

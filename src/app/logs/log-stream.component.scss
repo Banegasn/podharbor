@@ -33,10 +33,10 @@
 .line {
   display: flex;
   align-items: flex-start;
-  gap: var(--sp-4);
+  gap: var(--sp-6);
   height: var(--log-line-height);
   line-height: var(--log-line-height);
-  padding: 0 var(--sp-5);
+  padding: 0 var(--sp-8);
   white-space: pre;
   border-left: 2px solid transparent;
 }
@@ -91,6 +91,7 @@
 
 .line.warn {
   border-left-color: var(--warning-fg);
+  background: var(--warning-bg);
   color: var(--warning-fg);
 }
 
@@ -104,7 +105,28 @@
   position: absolute;
   inset: 0;
   display: grid;
-  place-content: center;
+  align-content: center;
+  justify-items: center;
+  gap: var(--sp-3);
   margin: 0;
+  padding: var(--sp-8);
   font-family: var(--font);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
+.empty strong {
+  font-size: var(--fs-md);
+}
+
+.empty-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--sp-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--accent);
 }

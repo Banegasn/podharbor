@@ -2,11 +2,11 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: var(--sp-5);
-  height: 30px;
-  padding: 0 var(--sp-5);
+  gap: var(--sp-6);
+  height: 34px;
+  padding: 0 var(--sp-8);
   border-top: 1px solid var(--border);
-  background: var(--bg-light);
+  background: var(--surface);
   font-size: var(--fs-xs);
   color: var(--fg-muted);
 }
@@ -21,6 +21,7 @@
   color: inherit;
   font: inherit;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 button.item {
@@ -28,7 +29,7 @@ button.item {
 }
 
 button.item:hover {
-  color: var(--fg);
+  color: var(--accent);
 }
 
 .accent {
@@ -58,14 +59,28 @@ button.item:hover {
 }
 
 .panel {
-  right: var(--sp-5);
-  bottom: 30px;
+  right: var(--sp-8);
+  bottom: 38px;
   width: 460px;
+  max-width: calc(100vw - 32px);
   max-height: 60vh;
   overflow: auto;
   display: grid;
   gap: var(--sp-4);
   color: var(--fg);
+}
+
+@media (max-width: 900px) {
+  .cluster {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .item:nth-of-type(3),
+  .item:nth-of-type(4) {
+    display: none;
+  }
 }
 
 h2 {

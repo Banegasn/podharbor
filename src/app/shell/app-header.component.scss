@@ -1,15 +1,13 @@
 :host {
   display: grid;
-  /* The chips strip is the only column allowed to give way — it scrolls on its own — so a narrow
-     window squeezes it instead of pushing the refresh and theme controls out of sight. */
   grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  grid-template-areas: 'brand context namespaces tabs actions';
   align-items: center;
-  gap: var(--sp-6);
-  min-height: 58px;
-  padding: var(--sp-4) var(--sp-5);
+  gap: var(--sp-7);
+  min-height: 66px;
+  padding: var(--sp-4) var(--sp-8);
   border-bottom: 1px solid var(--border);
-  background: var(--bg);
-  /* The bar drags the window, but it is not a handle to point at: no grab cursor. */
+  background: var(--surface);
   cursor: default;
 }
 
@@ -18,27 +16,37 @@
 }
 
 .brand {
+  grid-area: brand;
   display: flex;
   align-items: center;
-  gap: var(--sp-4);
+  gap: var(--sp-5);
 }
 
 .mark {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--border-input);
-  border-radius: 7px;
-  background: var(--surface);
-  color: var(--accent);
+  width: 34px;
+  height: 34px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: linear-gradient(145deg, var(--accent-light), var(--accent));
+  color: var(--accent-contrast);
+  box-shadow: 0 4px 12px rgba(19, 124, 115, 0.18);
 }
 
 h1 {
   margin: 0;
-  font-size: var(--fs-md);
+  font-size: 16px;
   font-weight: var(--fw-semibold);
+  letter-spacing: -0.025em;
   white-space: nowrap;
+}
+
+.context {
+  grid-area: context;
+}
+.namespaces {
+  grid-area: namespaces;
 }
 
 .field {
@@ -55,7 +63,7 @@ h1 {
   font-weight: var(--fw-semibold);
   color: var(--fg-muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
 }
 
 .mode {
@@ -73,18 +81,19 @@ h1 {
 }
 
 .context .select {
-  width: 158px;
+  width: 172px;
   height: var(--control-height-sm);
 }
 
 .tabs {
+  grid-area: tabs;
   display: flex;
   align-items: center;
   gap: var(--sp-1);
   padding: 2px;
-  border: 1px solid var(--border-input);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--surface);
+  background: var(--subtle);
 }
 
 .tab {
@@ -92,7 +101,7 @@ h1 {
   align-items: center;
   gap: var(--sp-3);
   height: var(--control-height-sm);
-  padding: 0 var(--sp-4);
+  padding: 0 var(--sp-5);
   border: 0;
   border-radius: var(--radius-sm);
   background: transparent;
@@ -110,9 +119,11 @@ h1 {
 .tab.active {
   background: var(--accent-bg);
   color: var(--accent);
+  box-shadow: 0 1px 3px rgba(16, 61, 57, 0.09);
 }
 
 .actions {
+  grid-area: actions;
   display: flex;
   align-items: center;
   gap: var(--sp-3);
@@ -123,13 +134,46 @@ h1 {
   height: var(--control-height-sm);
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1280px) {
   :host {
-    gap: var(--sp-4);
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'brand context . actions'
+      'namespaces namespaces tabs tabs';
+    gap: var(--sp-4) var(--sp-7);
+  }
+
+  .tabs {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 720px) {
+  :host {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'brand context actions'
+      'namespaces namespaces namespaces'
+      'tabs tabs tabs';
+    padding-inline: var(--sp-5);
   }
 
   .brand h1,
   .field .label {
+    display: none;
+  }
+
+  .context .select {
+    width: 100%;
+  }
+
+  .tabs {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .actions .interval {
     display: none;
   }
 }

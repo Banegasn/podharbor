@@ -140,17 +140,27 @@
   </div>
 
   @if ($rows().length === 0) {
-    <p class="empty muted">
-      @if (kube.$enabledNamespaces().length === 0) {
-        Enable a namespace to list pods.
-      } @else if (kube.$loading()) {
-        Loading pods…
-      } @else if ($filter()) {
-        No pod matches “{{ $filter() }}”.
-      } @else {
-        No pods in {{ kube.$enabledNamespaces().join(', ') }}.
-      }
-    </p>
+    <div class="empty">
+      <span class="empty-icon"><app-icon name="server" [size]="20" /></span>
+      <strong>
+        @if (kube.$loading()) {
+          Loading pods…
+        } @else if ($filter()) {
+          No matching pods
+        } @else {
+          No pods to show
+        }
+      </strong>
+      <span class="muted">
+        @if (kube.$enabledNamespaces().length === 0) {
+          Enable a namespace to list pods.
+        } @else if ($filter()) {
+          Try a different search for “{{ $filter() }}”.
+        } @else {
+          No pods in {{ kube.$enabledNamespaces().join(', ') }}.
+        }
+      </span>
+    </div>
   }
 </div>
 

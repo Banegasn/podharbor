@@ -26,6 +26,11 @@ body {
   user-select: none;
 }
 
+::selection {
+  background: var(--accent-bg);
+  color: var(--fg);
+}
+
 app-root {
   display: block;
   height: 100%;
@@ -61,8 +66,8 @@ svg {
 /* Scrollbars */
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -92,7 +97,13 @@ svg {
   font-weight: var(--fw-medium);
   white-space: nowrap;
   cursor: pointer;
-  transition: background var(--transition);
+  box-shadow: 0 1px 2px rgba(20, 45, 50, 0.04);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
 }
 
 .btn:hover:not(:disabled) {
@@ -108,7 +119,8 @@ svg {
 .btn-primary {
   border-color: transparent;
   background: var(--accent);
-  color: var(--bg);
+  color: var(--accent-contrast);
+  box-shadow: 0 2px 8px rgba(19, 124, 115, 0.18);
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -128,6 +140,7 @@ svg {
 .btn-ghost {
   border-color: transparent;
   background: transparent;
+  box-shadow: none;
 }
 
 .btn-sm {
@@ -158,6 +171,10 @@ svg {
   color: var(--fg);
   line-height: 1;
   cursor: pointer;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
 }
 
 .icon-btn-sm {
@@ -235,6 +252,10 @@ svg {
   background: var(--surface);
   color: var(--fg);
   outline: none;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    background var(--transition);
 }
 
 /* Native selects render their own inset padding and arrow — and WebKit's differs again from
@@ -278,6 +299,20 @@ svg {
   font-size: var(--fs-xs);
   font-weight: var(--fw-medium);
   white-space: nowrap;
+  line-height: 1;
+}
+
+.badge.success::before,
+.badge.error::before,
+.badge.warning::before,
+.badge.info::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.85;
 }
 
 .badge.neutral {
@@ -328,7 +363,7 @@ svg {
 .popover {
   position: absolute;
   z-index: 20;
-  padding: var(--sp-4);
+  padding: var(--sp-6);
   border: 1px solid var(--border-input);
   border-radius: var(--radius-md);
   background: var(--surface);
@@ -362,11 +397,11 @@ svg {
   font-weight: var(--fw-semibold);
   color: var(--fg-muted);
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.065em;
 }
 
 .grid-cell {
-  padding: 0 var(--sp-4);
+  padding: 0 var(--sp-5);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -385,7 +420,17 @@ svg {
 .head-cell > .head-label {
   flex: 1;
   min-width: 0;
-  padding: 0 var(--sp-4);
+  padding: 0 var(--sp-5);
+}
+
+.grid-row:not(.grid-head) {
+  transition: background var(--transition);
+}
+
+button:focus-visible,
+input[type='checkbox']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .sortable {

@@ -35,19 +35,20 @@ import { ShortcutsService } from '../core/shortcuts.service';
       position: fixed;
       inset: 0;
       z-index: 50;
-      background: rgba(12, 16, 10, 0.35);
+      background: rgba(8, 20, 27, 0.48);
+      backdrop-filter: blur(3px);
     }
 
     .dialog {
       position: fixed;
       z-index: 51;
-      top: 22vh;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
       width: min(460px, 90vw);
       display: grid;
-      gap: var(--sp-4);
-      padding: var(--sp-6);
+      gap: var(--sp-6);
+      padding: var(--sp-10);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       background: var(--surface);
@@ -56,12 +57,13 @@ import { ShortcutsService } from '../core/shortcuts.service';
 
     .dialog.danger {
       border-color: var(--error-border);
-      border-top: 3px solid var(--error-fg);
+      border-top: 4px solid var(--error-fg);
     }
 
     h2 {
       margin: 0;
       font-size: var(--fs-lg);
+      letter-spacing: -0.025em;
     }
 
     .message {
@@ -89,6 +91,18 @@ import { ShortcutsService } from '../core/shortcuts.service';
       display: flex;
       justify-content: flex-end;
       gap: var(--sp-4);
+      margin-top: var(--sp-2);
+    }
+
+    .dialog.danger .actions .btn-danger {
+      border-color: var(--error-fg);
+      background: var(--error-fg);
+      color: var(--surface);
+    }
+
+    .dialog.danger .actions .btn-danger:hover {
+      filter: brightness(1.08);
+      background: var(--error-fg);
     }
   `,
 })

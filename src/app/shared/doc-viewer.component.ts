@@ -91,10 +91,10 @@ const JSON_LINE = /^(\s*)"([^"]+)":\s?(.*)$/;
 
     .doc {
       overflow: auto;
-      padding: var(--sp-4);
+      padding: var(--sp-6);
       border: 1px solid var(--border-light);
-      border-radius: var(--radius-sm);
-      background: var(--bg-light);
+      border-radius: var(--radius-md);
+      background: var(--subtle);
       font-size: var(--fs-xs);
       line-height: 1.55;
     }

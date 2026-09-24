@@ -40,12 +40,12 @@ import { ToastService } from '../core/toast.service';
   styles: `
     :host {
       position: fixed;
-      right: var(--sp-5);
-      bottom: 34px;
+      right: var(--sp-8);
+      bottom: 42px;
       z-index: 40;
       display: grid;
-      gap: var(--sp-3);
-      width: min(420px, 40vw);
+      gap: var(--sp-4);
+      width: min(420px, calc(100vw - 32px));
     }
 
     .toast {
@@ -53,11 +53,11 @@ import { ToastService } from '../core/toast.service';
       grid-template-columns: auto minmax(0, 1fr) auto;
       align-items: start;
       gap: var(--sp-4);
-      padding: var(--sp-4) var(--sp-5);
+      padding: var(--sp-6) var(--sp-8);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       background: var(--surface);
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-md);
       font-size: var(--fs-sm);
     }
 

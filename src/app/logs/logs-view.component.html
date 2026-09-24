@@ -169,9 +169,7 @@
     </span>
   } @empty {
     @if (logs.$groups().length === 0) {
-      <span class="muted hint">
-        No source yet — use “Add source”, or press “Tail logs” from the Pods and Workloads tabs.
-      </span>
+      <span class="muted hint">No active sources</span>
     }
   }
 

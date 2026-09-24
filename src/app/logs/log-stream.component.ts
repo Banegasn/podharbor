@@ -16,9 +16,10 @@ import {
 import { LogEntry, LogsService } from '../core/logs.service';
 import { PrefsService } from '../core/prefs.service';
 import { formatLogTime, middleEllipsis } from '../core/format';
+import { IconComponent } from '../shared/icon.component';
 
 /** Mirrors `--log-line-height` in `_tokens.scss`: the virtualiser's fixed row pitch. */
-const ROW_HEIGHT = 20;
+const ROW_HEIGHT = 23;
 const OVERSCAN = 12;
 /** Wrapped lines have no fixed height, so that mode renders a capped tail instead of a window. */
 const WRAP_TAIL = 1500;
@@ -36,6 +37,7 @@ const POD_LABEL_MAX_COMPACT = 18;
 @Component({
   selector: 'app-log-stream',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [IconComponent],
   templateUrl: './log-stream.component.html',
   styleUrl: './log-stream.component.scss',
   host: { '(window:resize)': 'measure()', '[class.compact]': '$compact()' },

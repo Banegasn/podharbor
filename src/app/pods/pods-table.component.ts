@@ -63,7 +63,7 @@ export class PodsTableComponent {
     { key: 'namespace', label: 'Namespace', width: 120 },
     { key: 'workload', label: 'Workload', width: 130 },
     { key: 'ready', label: 'Ready', width: 78 },
-    { key: 'status', label: 'Status', width: 132 },
+    { key: 'status', label: 'Status', width: 160, min: 150 },
     { key: 'restarts', label: 'Restarts', width: 100 },
     { key: 'age', label: 'Age', width: 70 },
     { key: 'image', label: 'Image', width: 170 },

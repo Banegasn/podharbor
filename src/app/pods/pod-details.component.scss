@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-4);
-  padding: var(--sp-4) var(--sp-5);
+  padding: var(--sp-6) var(--sp-8);
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -33,15 +33,30 @@
 h2 {
   margin: 0;
   min-width: 0;
-  font-size: var(--fs-md);
+  font-size: var(--fs-lg);
+  letter-spacing: -0.025em;
 }
 
 .tabs {
   display: flex;
   gap: var(--sp-2);
-  padding: var(--sp-3) var(--sp-5);
+  padding: var(--sp-3) var(--sp-8);
   border-bottom: 1px solid var(--border-light);
-  background: var(--subtle);
+  background: var(--surface);
+}
+
+.tabs .btn {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--fg-muted);
+}
+
+.tabs .btn:hover,
+.tabs .btn.is-on {
+  border-color: transparent;
+  background: var(--accent-bg);
+  color: var(--accent);
 }
 
 .body {
@@ -57,31 +72,41 @@ h2 {
 
 .body.details {
   overflow: auto;
-  padding: var(--sp-5);
+  padding: var(--sp-8);
   display: grid;
   gap: var(--sp-6);
   align-content: start;
+  background: var(--bg-light);
+}
+
+.body.details > section {
+  min-width: 0;
+  padding: var(--sp-8);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--surface);
 }
 
 h3 {
-  margin: 0 0 var(--sp-3);
+  margin: 0 0 var(--sp-5);
   font-size: var(--fs-2xs);
   font-weight: var(--fw-semibold);
   color: var(--fg-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
 .facts {
   display: grid;
   grid-template-columns: 108px minmax(0, 1fr);
-  gap: var(--sp-2) var(--sp-4);
+  gap: var(--sp-4) var(--sp-6);
   margin: 0;
   font-size: var(--fs-sm);
 }
 
 .body.overview > .facts {
-  padding: var(--sp-5);
+  padding: var(--sp-8);
+  background: var(--bg-light);
 }
 
 .facts dt {
@@ -115,7 +140,7 @@ h3 {
   gap: var(--sp-3);
   flex-wrap: wrap;
   min-width: 0;
-  padding: var(--sp-3) var(--sp-5);
+  padding: var(--sp-4) var(--sp-8);
   border-bottom: 1px solid var(--border-light);
   background: var(--subtle);
   color: var(--fg-muted);
@@ -146,10 +171,10 @@ h3 {
 }
 
 .container {
-  padding: var(--sp-4);
+  padding: var(--sp-6);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
-  background: var(--bg-light);
+  background: var(--subtle);
 }
 
 .container + .container {
@@ -195,7 +220,7 @@ h3 {
 }
 
 .pair {
-  padding: 1px var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
   background: var(--bg-light);

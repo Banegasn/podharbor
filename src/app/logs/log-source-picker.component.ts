@@ -206,18 +206,18 @@ const MAX_ROWS = 200;
     }
 
     .panel {
-      top: 34px;
+      top: 40px;
       left: 0;
-      width: 420px;
+      width: min(440px, calc(100vw - 24px));
       display: grid;
-      gap: var(--sp-4);
+      gap: var(--sp-5);
     }
 
     .tabs {
       display: flex;
       gap: var(--sp-1);
       padding: 2px;
-      border: 1px solid var(--border-input);
+      border: 1px solid var(--border);
       border-radius: var(--radius-md);
       background: var(--subtle);
     }
@@ -246,13 +246,14 @@ const MAX_ROWS = 200;
     .tab.active {
       background: var(--accent-bg);
       color: var(--accent);
+      box-shadow: 0 1px 3px rgba(16, 61, 57, 0.09);
     }
 
     .list {
       max-height: 320px;
       overflow: auto;
       display: grid;
-      gap: 1px;
+      gap: 2px;
     }
 
     .row {
@@ -267,7 +268,7 @@ const MAX_ROWS = 200;
       align-items: center;
       gap: var(--sp-4);
       min-width: 0;
-      height: var(--control-height-sm);
+      height: 34px;
       padding: 0 var(--sp-3);
       border: 0;
       border-radius: var(--radius-sm);

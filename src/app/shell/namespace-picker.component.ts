@@ -190,6 +190,19 @@ import { describeError } from '../core/models';
       font-weight: var(--fw-medium);
       white-space: nowrap;
       cursor: pointer;
+      transition:
+        background var(--transition),
+        border-color var(--transition),
+        color var(--transition);
+    }
+
+    .chip:hover {
+      background: var(--active);
+    }
+
+    .chip:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
 
     .chip.off {
@@ -217,11 +230,11 @@ import { describeError } from '../core/models';
     }
 
     .panel {
-      top: 34px;
+      top: 40px;
       left: 0;
-      width: 300px;
+      width: min(340px, calc(100vw - 24px));
       display: grid;
-      gap: var(--sp-4);
+      gap: var(--sp-5);
     }
 
     header {
@@ -261,7 +274,7 @@ import { describeError } from '../core/models';
       max-height: 260px;
       overflow: auto;
       display: grid;
-      gap: 1px;
+      gap: 2px;
     }
 
     .row {
@@ -276,7 +289,7 @@ import { describeError } from '../core/models';
       align-items: center;
       gap: var(--sp-4);
       min-width: 0;
-      height: var(--control-height-sm);
+      height: 34px;
       padding: 0 var(--sp-3);
       border: 0;
       border-radius: var(--radius-sm);

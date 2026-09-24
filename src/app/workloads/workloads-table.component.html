@@ -147,14 +147,24 @@
   </div>
 
   @if ($rows().length === 0) {
-    <p class="empty muted">
-      @if (kube.$enabledNamespaces().length === 0) {
-        Enable a namespace to list workloads.
-      } @else if (kube.$loading()) {
-        Loading workloads…
-      } @else {
-        No Deployment or StatefulSet found.
-      }
-    </p>
+    <div class="empty">
+      <span class="empty-icon"><app-icon name="workloads" [size]="20" /></span>
+      <strong>
+        @if (kube.$loading()) {
+          Loading workloads…
+        } @else {
+          No workloads to show
+        }
+      </strong>
+      <span class="muted">
+        @if (kube.$enabledNamespaces().length === 0) {
+          Enable a namespace to list workloads.
+        } @else if ($filter()) {
+          Try a different search for “{{ $filter() }}”.
+        } @else {
+          No Deployment or StatefulSet found.
+        }
+      </span>
+    </div>
   }
 </div>

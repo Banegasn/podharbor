@@ -3,13 +3,14 @@
   grid-template-rows: auto minmax(0, 1fr);
   min-height: 0;
   position: relative;
+  background: var(--surface);
 }
 
 .toolbar {
   display: flex;
   align-items: center;
   gap: var(--sp-4);
-  padding: var(--sp-4) var(--sp-5);
+  padding: var(--sp-5) var(--sp-8);
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
@@ -31,12 +32,16 @@
 
 .search .input {
   width: 100%;
-  padding-left: 28px;
+  padding-left: 32px;
 }
 
 .count {
   font-size: var(--fs-xs);
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-full);
+  background: var(--subtle);
 }
 
 .scroll {
@@ -49,6 +54,10 @@
   outline-offset: -2px;
 }
 
+.row:focus-visible {
+  outline: 2px solid var(--accent);
+}
+
 .row:hover {
   background: var(--hover);
 }
@@ -58,7 +67,8 @@
 }
 
 .row.open {
-  box-shadow: inset 2px 0 0 var(--accent);
+  background: var(--accent-bg);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .check {
@@ -73,7 +83,8 @@
 }
 
 .name {
-  font-weight: var(--fw-medium);
+  font-weight: var(--fw-semibold);
+  color: var(--fg);
 }
 
 .not-ready {
@@ -92,7 +103,7 @@
   justify-content: flex-end;
   gap: var(--sp-1);
   padding-right: var(--sp-3);
-  opacity: 0;
+  opacity: 0.5;
 }
 
 .row:hover .actions,
@@ -104,16 +115,35 @@
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  height: var(--control-height-sm);
-  padding: 0 var(--sp-5);
+  height: var(--head-height);
+  padding: 0 var(--sp-8);
   border-bottom: 1px solid var(--row-border);
-  background: var(--subtle);
+  background: var(--accent-bg);
   font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
-  color: var(--fg-muted);
+  color: var(--accent);
 }
 
 .empty {
-  padding: var(--sp-8) var(--sp-5);
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-3);
+  padding: 64px var(--sp-8);
   text-align: center;
+  font-size: var(--fs-sm);
+}
+
+.empty strong {
+  font-size: var(--fs-md);
+}
+
+.empty-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--sp-2);
+  border-radius: var(--radius-md);
+  background: var(--accent-bg);
+  color: var(--accent);
 }
