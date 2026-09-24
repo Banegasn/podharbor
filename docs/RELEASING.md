@@ -5,7 +5,7 @@ The website is https://banegasn.github.io/podharbor/ and publishes from `main:/d
 
 ## Release a version
 
-With Node.js 24+, pnpm 11.8.0, Rust, and the Tauri system dependencies installed:
+With Node.js 24+, pnpm 12.6.0, Rust, and the Tauri system dependencies installed:
 
 ```sh
 pnpm install --frozen-lockfile

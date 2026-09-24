@@ -106,11 +106,9 @@ fn compute_status(pod: &Pod, containers: &[ContainerSummary], init_containers: &
                     return reason.clone();
                 }
             }
-            "terminated" => {
-                if phase != "Running" {
-                    if let Some(reason) = &container.state_reason {
-                        return reason.clone();
-                    }
+            "terminated" if phase != "Running" => {
+                if let Some(reason) = &container.state_reason {
+                    return reason.clone();
                 }
             }
             _ => {}
