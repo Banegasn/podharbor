@@ -1,6 +1,6 @@
 [package]
 name = "podharbor"
-version = "0.1.1"
+version = "0.1.2"
 description = "Desktop Kubernetes pods, workloads and logs console"
 authors = ["banegasn"]
 license = "MIT"
